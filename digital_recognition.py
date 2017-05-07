@@ -46,7 +46,7 @@ k_fold = KFold(n_splits=4)
 
 ################## svm
 gamma_range = np.logspace(-3, 3, 3)
-c_range = np.logspace(-1,3,3)
+c_range = np.logspace(0,3,3)
 for c in c_range:
     for g in gamma_range:
         clf = svm.SVC(C=c, cache_size=200, class_weight=None, coef0=0.0,\
@@ -55,6 +55,7 @@ for c in c_range:
                         tol=0.001, verbose=False) # gamma = "auto"
         clf.fit(xTr, yTr)
         res = clf.predict(xTe)
+        print (c, g)
         print (cross_val_score(clf, xTr, yTr, cv=k_fold, scoring='precision_macro'))
 # np.savetxt("prediction_svm.csv", res, fmt="%s", delimiter=",")
 # [ 0.8227374   0.83417365  0.81352299  0.82787335  0.80122374] for C=1000. larger C better here
