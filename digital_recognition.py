@@ -8,7 +8,7 @@ from scipy.io import loadmat
 from sklearn.model_selection import KFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import neighbors, datasets, svm
-
+from sklearn.neural_network import MLPClassifier
 
 # load data
 xTr = np.loadtxt("trainX.csv", delimiter=",")
@@ -17,7 +17,7 @@ xTe = np.loadtxt("testX.csv", delimiter=",")
 print ("xTr.shape: ",xTr.shape)
 print ("yTr.shape: ",yTr.shape)
 print ("xTe.shape: ",xTe.shape)
-k_fold = KFold(n_splits=5)
+k_fold = KFold(n_splits=4)
 
 ############# random forest
 # clf = RandomForestClassifier(n_estimators=10, criterion='gini', max_depth=None, min_samples_split=2, \
@@ -44,21 +44,42 @@ k_fold = KFold(n_splits=5)
 #     #http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
 
 
-############## svm
-clf = svm.SVC(C=100.0, cache_size=200, class_weight=None, coef0=0.0,\
-                decision_function_shape='ovo', degree=3, gamma='auto', kernel='rbf',\
-                max_iter=-1, probability=False, random_state=None, shrinking=True,\
-                tol=0.001, verbose=False)
-clf.fit(xTr, yTr)
-res = clf.predict(xTe)
-print (cross_val_score(clf, xTr, yTr, cv=k_fold, scoring='precision_macro'))
+################## svm
+gamma_range = np.logspace(-3, 3, 3)
+c_range = np.logspace(-1,3,3)
+for c in c_range:
+    for g in gamma_range:
+        clf = svm.SVC(C=c, cache_size=200, class_weight=None, coef0=0.0,\
+                        decision_function_shape='ovo', degree=3, gamma = g, kernel='poly',\
+                        max_iter=-1, probability=False, random_state=None, shrinking=True,\
+                        tol=0.001, verbose=False) # gamma = "auto"
+        clf.fit(xTr, yTr)
+        res = clf.predict(xTe)
+        print (cross_val_score(clf, xTr, yTr, cv=k_fold, scoring='precision_macro'))
 # np.savetxt("prediction_svm.csv", res, fmt="%s", delimiter=",")
-# [ 0.65516836  0.67049135  0.65312592  0.688606    0.63911956]
+# [ 0.8227374   0.83417365  0.81352299  0.82787335  0.80122374] for C=1000. larger C better here
 # http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
 
 
+# ################### neuron network
+# clf = MLPClassifier(hidden_layer_sizes=(100,), activation='relu', solver='adam', \
+#                     alpha=0.0001, batch_size='auto', learning_rate='constant', learning_rate_init=0.001,\
+#                     power_t=0.5, max_iter=200, shuffle=True, random_state=None, tol=0.0001, verbose=False, \
+#                     warm_start=False, momentum=0.9, nesterovs_momentum=True, early_stopping=False, \
+#                     validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+# clf.fit(xTr, yTr)
+# print (cross_val_score(clf, xTr, yTr, cv=k_fold, scoring='precision_macro'))
+# res = clf.predict(xTe)
+# # http://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html#sklearn.neural_network.MLPClassifier
 
 
+# ############## Stochastic Gradient Descent ############ default hinge so linear svm
+# from sklearn.linear_model import SGDClassifier
+# clf = SGDClassifier()
+# clf.fit(xTr, yTr)
+# print (cross_val_score(clf, xTr, yTr, cv=k_fold, scoring='precision_macro'))
 
 
-
+# # other useful links
+# https://mmlind.github.io/Simple_1-Layer_Neural_Network_for_MNIST_Handwriting_Recognition/s
+# http://www.kdnuggets.com/2016/10/beginners-guide-neural-networks-python-scikit-learn.html/2
