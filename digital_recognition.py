@@ -20,12 +20,15 @@ k_fold = KFold(n_splits=4)
 # extend the sample
 mu, sigma = 0, 0.3 # mean and standard deviation
 # ran = np.random.normal(mu, sigma, n*d).reshape(n,d)
-ran = np.random.rand(xTr.shape[0],xTr.shape[1])/10
+ran = np.random.rand(xTr.shape[0],xTr.shape[1])/5 - 0.1
+print (ran[0])
 xTr_extra = xTr + ran
 yTr_extra = yTr
-print (xTr_extra[0])
-xTr =  np.concatenate((xTr, xTr_extra),axis=0)
-yTr =  np.concatenate((yTr, yTr_extra),axis=0)
+# print (xTr_extra[0])
+idx = np.arange(len(xTr) + len(xTr_extra))
+np.random.shuffle(idx)
+xTr =  np.concatenate((xTr, xTr_extra),axis=0)[idx]
+yTr =  np.concatenate((yTr, yTr_extra),axis=0)[idx]
 print ("xTr.shape: ",xTr.shape)
 print ("yTr.shape: ",yTr.shape)
 print ("xTe.shape: ",xTe.shape)
