@@ -49,7 +49,7 @@ print ("xTr.shape: ",xTr.shape)
 print ("yTr.shape: ",yTr.shape)
 print ("xTe.shape: ",xTe.shape)
 
-# ############ random forest
+# ############## random forest
 # clf = RandomForestClassifier(n_estimators=100, criterion='gini', max_depth=None, min_samples_split=2, \
 #                               min_samples_leaf=30, min_weight_fraction_leaf=0.0, max_features='auto', \
 #                               max_leaf_nodes=None, min_impurity_split=1e-07, bootstrap=True, oob_score=False, \
