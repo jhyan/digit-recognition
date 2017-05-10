@@ -83,12 +83,12 @@ clf = svm.SVC(C= 10, cache_size=200, class_weight=None, coef0=0.0,\
                 decision_function_shape='ovo', degree=3, gamma = 1, kernel='poly',\
                 max_iter=-1, probability=False, random_state=None, shrinking=True,\
                 tol=0.001, verbose=False) # gamma = "auto"
-clf.fit(xTr, yTr)
+clf.fit(xTr, yTr)#
 res = clf.predict(xTe)
 # print (c, g)
 print (cross_val_score(clf, xTr, yTr, cv=k_fold, scoring='precision_macro'))
 np.savetxt("prediction_svm.csv", res, fmt="%s", delimiter=",")
-# [ 0.8227374   0.83417365  0.81352299  0.82787335  0.80122374] for C=1000. larger C better here
+# [ 0.98510352  0.99806012  0.99944894  0.94175308] for C=10 larger C better here
 # http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
 
 
